@@ -1,8 +1,7 @@
-"""
-URL configuration for movie_rating_platform project.
+"""movie_rating_platform URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
+    https://docs.djangoproject.com/en/5.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,8 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+from apps.users.views import EmailTokenObtainPairView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # API URL patterns
+    path('api/auth/', include([
+        path('login', EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('refresh', TokenRefreshView.as_view(), name='token_refresh'),
+        path('verify', TokenVerifyView.as_view(), name='token_verify'),
+        path('', include('apps.users.urls')),
+    ])),
+    path('api/', include('apps.movies.urls')),
+
+    # API schema & docs
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

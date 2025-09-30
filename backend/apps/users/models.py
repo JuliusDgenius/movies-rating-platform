@@ -5,4 +5,7 @@ class User(AbstractUser):
     """
     Custom user model that extends the default AbstractUser.
     """
-    pass
+    email = models.EmailField(unique=True)
+
+    # Keep default username auth; email is unique for login flow
+    REQUIRED_FIELDS = ["email"]
