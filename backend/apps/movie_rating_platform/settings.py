@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     # Local apps
-    'apps.users.apps.UsersConfig',
-    'apps.ratings.apps.RatingsConfig',
-    'apps.movies.apps.MoviesConfig',
+    'apps.users',
+    'apps.ratings',
+    'apps.movies',
 ]
 
 MIDDLEWARE = [
