@@ -1,7 +1,7 @@
+
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
-from movies.models import Movie
 
 class Rating(models.Model):
     """
@@ -13,7 +13,7 @@ class Rating(models.Model):
         related_name='ratings'
     )
     movie = models.ForeignKey(
-        Movie,
+        'movies.Movie',
         on_delete=models.CASCADE,
         related_name='ratings'
     )
@@ -27,8 +27,9 @@ class Rating(models.Model):
 
     class Meta:
         # A user can only rate a specific movie once.
-        unique_together = ('user', 'movie')
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'movie'], name='unique_user_movie')
+        ]
 
     def __str__(self):
         return f"{self.user.username}'s {self.rating}-star rating for {self.movie.title}"
-
